@@ -24,11 +24,9 @@
     { 
         if(isset($_POST["nombre"]) && $_POST["password"] != '' && $_POST["email"] != '' && $_POST["fecha"] != '')  
         { 
-            $_SESSION["nombre"] = $_POST["nombre"];
-            $_SESSION["password"] = $_POST["password"];
-            $_SESSION["email"] = $_POST["email"];
-            $_SESSION["fecha"] = $_POST["fecha"];
-
+            $user = array("nombre"=>$_POST["nombre"], "password"=>$_POST["password"], "email"=>$_POST["email"], "fecha"=>$_POST["fecha"]);
+            setcookie("inicio", time(), time() + (86400 * 30), "/");
+            $_SESSION["user"] = $user ;
         } 
     else
         echo "Por favor llenar todos los campos !!"; 
