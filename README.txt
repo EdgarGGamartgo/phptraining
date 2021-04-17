@@ -14,3 +14,6 @@ sudo /etc/init.d/apache2 restart
 
 When unable to upload files to a given directory from the tmp directory always try to give write permissions with followinf command
 sudo chmod 777 /var/www/phptraining/files
+
+# NOTE: When loading files to any folder remember to first confirm if such folder has writing
+permission for all users
