@@ -28,6 +28,7 @@
             if($msg != '') {
                 echo "Bienvenido " . $msg;
                 echo "<br>";
+                echo "<button>Panel de archivos</button>";
             } else {
                 echo "Credeciales incorrectas!!!";
             }

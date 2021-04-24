@@ -10,15 +10,19 @@
     </body> 
 </html> 
 <?php 
-    session_start();
     $message = '';
     $error = '';
     $uploads_dir = './../files';
+    $file = './../files/users.json';
+
+    // Read
+    $json = file_get_contents($file);
+    $files = json_decode($json, true);
 
     if (isset($_COOKIE["inicio"])) {
-        if (isset($_SESSION["files"])) {
+        if (isset($files["files"])) {
             echo "<h1>Archivos subidos</h1>";
-            foreach($_SESSION["files"] as $file => $value) {
+            foreach($files["files"] as $file => $value) {
                 foreach($value as $key => $val) {
                     echo $key . ": " . $val . " " . "<br>";
                 }
@@ -28,23 +32,23 @@
             }
             echo "<hr>";
         }
-        echo "Bienvenido al panel de archivos " .  $_SESSION["user"]["email"]. "<hr>";
+        echo "Bienvenido al panel de archivos " .  $files["user"]["email"]. "<hr>";
     if (isset($_POST["upload"]))
     {
-        $error = $_FILES["archivo"]["error"];
+        $error = $files["files"]["archivo"]["error"];
 
         if ($error == UPLOAD_ERR_OK) {
-            $tmp_name = $_FILES["archivo"]["tmp_name"];
+            $tmp_name = $files["files"]["archivo"]["tmp_name"];
             
-            $name = basename($_FILES["archivo"]["name"]);
+            $name = basename($files["files"]["archivo"]["name"]);
 
             if (move_uploaded_file($tmp_name, "$uploads_dir/$name"))
             {
-                $buttonName = strtr($_FILES["archivo"]["name"],".","dot");
+                $buttonName = strtr($files["files"]["archivo"]["name"],".","dot");
                 $file = array("nombre"=>$buttonName, "location"=>"$uploads_dir/$name");
-                $_SESSION["files"][$file['nombre']] = $file;
-                $_SESSION["location"] = "$uploads_dir/$name";
-                $message = basename($_FILES["archivo"]["name"]) . " cargado correctamente";
+                $files["files"][$file['nombre']] = $file;
+                $files["files"]["location"] = "$uploads_dir/$name";
+                $message = basename($files["files"]["archivo"]["name"]) . " cargado correctamente";
                 echo $message;
             }
             else {
@@ -60,13 +64,13 @@
     if ($_SERVER['REQUEST_METHOD'] == "POST")
     {
         foreach($_POST as $post => $value) {
-            $TEMPFILES = $_SESSION['files'];
+            $TEMPFILES = $files['files'];
             unset($TEMPFILES[$post]);
-            foreach($_SESSION["files"] as $file => $value) {
+            foreach($files["files"] as $file => $value) {
                 foreach($value as $key => $val) {
                     if ($val == $post) {
-                        $_SESSION["files"] = $TEMPFILES;
-                        $deleteFile = unlink($_SESSION["location"]);
+                        $files["files"] = $TEMPFILES;
+                        $deleteFile = unlink($files["files"]["location"]);
                         echo "Archivo eliminado correctamente!!" . "<br>";
                     }
                 }

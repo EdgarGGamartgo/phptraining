@@ -12,22 +12,25 @@
     </body> 
 </html> 
 <?php 
-    session_start();
 
     if(isset($_POST["submit"]))  
     { 
-        if(isset($_SESSION["users"]) && isset($_POST["nombre"]) && $_POST["password"] != '')  
+        if(isset($_POST["nombre"]) && $_POST["password"] != '')  
         {
-            $users = $_SESSION["users"];
+            $file = './../files/users.json';
+            $json = file_get_contents($file);
+            $users = json_decode($json, true);
             $msg = ''; 
            
-            foreach($_SESSION["users"] as $user => $value) {
+            foreach($users["users"] as $user => $value) {
 
                 if ($value["email"] == $_POST["nombre"] && $value["password"] == $_POST["password"]) {
                     $msg = $value["email"];
                     $user = array("email"=>$_POST["nombre"], "password"=>$_POST["password"]);
                     setcookie("inicio", time(), time() + (86400 * 30), "/");
-                    $_SESSION["user"] = $user ;
+                    $users["users"]["user"] = $user ;
+                    $json = json_encode($users);
+                    file_put_contents($file, $json);
                 }
             
             }
